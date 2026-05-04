@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 41 Practice Quiz 1</title>
+
+    <style>
+        /* --- CSS Variables & Themes --- */
+        :root {
+            --transition-speed: 0.3s;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Default Feedback Colors (Fallback for custom themes) */
+            --feedback-success-bg: #064e3b;
+            --feedback-success-border: #059669;
+            --feedback-success-text: #a7f3d0;
+            --feedback-error-bg: #7f1d1d;
+            --feedback-error-border: #dc2626;
+            --feedback-error-text: #fecaca;
+        }[data-theme="dark"] {
+            --bg-body: #1e293b; --bg-card: #334155; --bg-header: #0f172a;
+            --text-main: #f1f5f9; --text-muted: #94a3b8; --text-accent: #38bdf8;
+            --border-color: #475569; --highlight-bg: #475569;
+            --button-bg: #38bdf8; --button-text: #0f172a; --button-hover: #0ea5e9;
+        }[data-theme="light"] {
+            --bg-body: #f3f4f6; --bg-card: #ffffff; --bg-header: #ffffff;
+            --text-main: #1f2937; --text-muted: #6b7280; --text-accent: #2563eb;
+            --border-color: #e5e7eb; --highlight-bg: #f3f4f6;
+            --button-bg: #2563eb; --button-text: #ffffff; --button-hover: #1d4ed8;
+            --feedback-success-bg: #ecfdf5; --feedback-success-border: #34d399; --feedback-success-text: #065f46;
+            --feedback-error-bg: #fef2f2; --feedback-error-border: #f87171; --feedback-error-text: #991b1b;
+        }[data-theme="midnight"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #e0e0e0; --text-muted: #888888; --text-accent: #90caf9;
+            --border-color: #333333; --highlight-bg: #1a1a1a;
+            --button-bg: #90caf9; --button-text: #000000; --button-hover: #42a5f5;
+            --feedback-success-bg: #051b11; --feedback-success-border: #0f5132; --feedback-success-text: #75b798;
+            --feedback-error-bg: #2c0b0e; --feedback-error-border: #842029; --feedback-error-text: #ea868f;
+        }[data-theme="legacy-dark"] {
+            --bg-body: #2d343e; --bg-card: #3c424f; --bg-header: #3c424f;
+            --text-main: #e8e6e3; --text-muted: #b0c4de; --text-accent: #8ab4f8;
+            --border-color: #555; --highlight-bg: #454c5a;
+            --button-bg: #8ab4f8; --button-text: #202124; --button-hover: #a3c5f9;
+            --feedback-success-bg: #344e41; --feedback-success-border: #52b788; --feedback-success-text: #c7f9cc;
+            --feedback-error-bg: #5e2129; --feedback-error-border: #a4133c; --feedback-error-text: #f8d7da;
+        }[data-theme="sepia"] {
+            --bg-body: #f4ecd8; --bg-card: #fdf6e3; --bg-header: #e4d5b7;
+            --text-main: #433422; --text-muted: #7c6f5a; --text-accent: #a05a2c;
+            --border-color: #d3c4a5; --highlight-bg: #ebe1c9;
+            --button-bg: #a05a2c; --button-text: #fdf6e3; --button-hover: #864822;
+            --feedback-success-bg: #e6f4ea; --feedback-success-border: #8ab893; --feedback-success-text: #2e4c35;
+            --feedback-error-bg: #f9e3e3; --feedback-error-border: #d48f8f; --feedback-error-text: #5c2b2b;
+        }[data-theme="contrast"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #ffffff; --text-muted: #dddddd; --text-accent: #ffff00;
+            --border-color: #ffffff; --highlight-bg: #333333;
+            --button-bg: #ffff00; --button-text: #000000; --button-hover: #e6e600;
+            --feedback-success-bg: #000000; --feedback-success-border: #00ff00; --feedback-success-text: #00ff00;
+            --feedback-error-bg: #000000; --feedback-error-border: #ff0000; --feedback-error-text: #ff0000;
+        }
+
+        /* --- Global Reset & Layout --- */
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.unpinned { position: relative; box-shadow: none; }
+
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; flex-wrap: wrap; gap: 15px;
+        }
+
+        header h1 { font-size: 1.5rem; margin: 0; color: var(--text-accent); font-weight: 700; }
+
+        .controls-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* --- Custom Theme Builder --- */
+        .custom-builder {
+            display: none; flex-wrap: wrap; gap: 15px;
+            background-color: var(--bg-card); padding: 10px 15px;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            margin-top: 5px; font-size: 0.85rem; animation: fadeIn 0.3s;
+            width: 100%; justify-content: flex-end;
+        }
+        .custom-builder.active { display: flex; }
+        .color-picker-group { display: flex; align-items: center; gap: 8px; }
+        .color-picker-group input[type="color"] {
+            border: none; width: 25px; height: 25px; border-radius: 4px;
+            cursor: pointer; padding: 0; background: none;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Controls --- */
+        .header-btn {
+            background-color: var(--highlight-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-btn:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        .pin-btn {
+            background: none; border: 1px solid var(--border-color); color: var(--text-main);
+            cursor: pointer; padding: 0 10px; border-radius: 6px; font-size: 1rem;
+            transition: background-color 0.2s; height: 34px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .pin-btn:hover { background-color: var(--highlight-bg); }
+        .pin-btn.pin-active { background-color: rgba(0, 0, 0, 0.1); }
+
+        select#theme-select {
+            padding: 0 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: var(--bg-card); color: var(--text-main);
+            cursor: pointer; font-family: inherit; height: 34px;
+        }
+
+        /* --- Section Navigation --- */
+        .section-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .section-nav button {
+            background-color: var(--highlight-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+            font-weight: 500; transition: all 0.2s;
+        }
+        .section-nav button:hover { border-color: var(--text-accent); color: var(--text-accent); }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem 4rem 1rem;
+        }
+
+        .section-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--text-accent);
+            color: var(--text-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            scroll-margin-top: 150px; /* Offset for sticky header */
+        }
+
+        /* --- Question Card --- */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .lo-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--text-accent);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+            display: none; /* Hidden by default */
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Options --- */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--highlight-bg);
+            border-color: var(--text-muted);
+        }
+
+        .option-label input {
+            margin-top: 0.3rem;
+            margin-right: 1rem;
+            accent-color: var(--text-accent);
+            transform: scale(1.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-check {
+            margin-top: 1.5rem;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-check:hover {
+            opacity: 0.9;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-link:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Feedback Area --- */
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            border: 1px solid transparent;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background-color: var(--feedback-success-bg);
+            border-color: var(--feedback-success-border);
+            color: var(--feedback-success-text);
+        }
+
+        .feedback.incorrect {
+            background-color: var(--feedback-error-bg);
+            border-color: var(--feedback-error-border);
+            color: var(--feedback-error-text);
+        }
+
+        .feedback-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .rationale {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .source {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-top: 1px dashed currentColor;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Mobile Tweaks --- */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; align-items: flex-start; }
+            .controls-wrapper { width: 100%; justify-content: flex-start; }
+            .section-nav { justify-content: flex-start; }
+            .custom-builder { justify-content: flex-start; }
+            header h1 { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="header-top">
+            <h1>Week 41 Practice Quiz 1</h1>
+            <div class="controls-wrapper">
+                
+                <!-- Reveal LOs Button -->
+                <button id="reveal-all-btn" class="header-btn" onclick="toggleAllLOs()">Show Learning Objectives</button>
+                
+                <!-- Pin Button -->
+                <button class="pin-btn pin-active" id="pin-btn" onclick="toggleHeader()" title="Pin/Unpin Header">📌</button>
+                
+                <!-- Theme Selector -->
+                <div class="theme-control">
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="dark">Modern Dark</option>
+                        <option value="midnight">Midnight</option>
+                        <option value="light">Modern Light</option>
+                        <option value="legacy-dark">Legacy Dark</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="contrast">High Contrast</option>
+                        <option value="custom">⚙️ Custom...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Custom Theme Color Pickers -->
+            <div class="custom-builder" id="custom-builder">
+                <div class="color-picker-group">
+                    <label>Background:</label>
+                    <input type="color" id="color-bg" value="#1a1a2e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Cards:</label>
+                    <input type="color" id="color-card" value="#16213e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Text:</label>
+                    <input type="color" id="color-text" value="#e94560" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Accent:</label>
+                    <input type="color" id="color-accent" value="#0f3460" oninput="updateCustomTheme()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dynamic Navigation Bar -->
+        <div class="section-nav" id="section-nav"></div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-root">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const quizData =[
+            // --- Section 1: Regulation of Acid-Base ---
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO1: Define the normal range for acid-base balance and describe the consequences that occur when the normal range is exceeded.",
+                question: "A 22-year-old woman with type 1 diabetes mellitus presents to the emergency department with profound hyperglycemia and an arterial blood pH of 7.15 (normal range 7.35 - 7.45). Which of the following clinical findings is a direct physiological consequence of this patient's acid-base derangement?",
+                options: {
+                    A: "Decreased blood pressure",
+                    B: "Hypokalemia",
+                    C: "Muscle cramps",
+                    D: "Restlessness",
+                    E: "Tingling of the fingers and toes"
+                },
+                correctAnswer: "A",
+                rationale: "The patient has metabolic acidosis. The physiological consequences of acidosis include decreased blood pressure, headache, hyperkalemia, muscle twitching, warm flushed skin, nausea, vomiting, and Kussmaul respirations. Options B, C, D, and E are signs of alkalosis.",
+                source: "Regulation of Acid-Base Balance PDF, slide 8: 'METABOLIC ACIDOSIS • Headache • Decreased BP • Hyperkalemia • Muscle Twitching • Warm, Flushed Skin • Nausea, Vomiting Diarrhea'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO1: Define the normal range for acid-base balance and describe the consequences that occur when the normal range is exceeded.",
+                question: "A 30-year-old man presents to the emergency department after three days of severe, persistent vomiting. Arterial blood gas analysis reveals a pH of 7.55 and a significantly elevated bicarbonate level. Based on the expected physiological consequences of exceeding the normal acid-base range in this specific manner, which of the following signs or symptoms is most likely to be observed in this patient?",
+                options: {
+                    A: "Deep, rapid breathing",
+                    B: "Kussmaul respirations",
+                    C: "Muscle weakness and hyperreflexia",
+                    D: "Tremors and muscle cramps",
+                    E: "Warm, flushed skin"
+                },
+                correctAnswer: "D",
+                rationale: "The patient's prolonged vomiting has resulted in metabolic alkalosis (elevated pH and high bicarbonate). According to the physiological consequences of this specific acid-base derangement, metabolic alkalosis typically presents with confusion, dysrhythmias, compensatory hypoventilation, hypokalemia, and neuromuscular symptoms such as tremors, muscle cramps, and tingling of the fingers and toes. In contrast, deep, rapid breathing (Option A) is seen in respiratory alkalosis; Kussmaul respirations and warm, flushed skin (Options B and E) are seen in metabolic acidosis; and muscle weakness with hyperreflexia (Option C) is seen in respiratory acidosis.",
+                source: "Regulation of Acid-Base Balance PDF, slide 8: 'METABOLIC ALKALOSIS... Tremors, Muscle Cramps, Tingling of Fingers & Toes'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO2: Explain the sources of acids and bases that must be dealt with to maintain acid-base balance.",
+                question: "A 28-year-old healthy woman follows a strict vegetarian diet consisting entirely of plant-based foods. In evaluating her daily acid-base balance, her dietary intake will most likely result in which of the following overall net physiological states?",
+                options: {
+                    A: "Net daily gain of 40-80 mM of hydrogen ions",
+                    B: "Net daily gain of volatile acids",
+                    C: "Net daily loss of hydrogen ions",
+                    D: "Massive accumulation of sulfuric acid",
+                    E: "Severe chronic metabolic acidosis"
+                },
+                correctAnswer: "C",
+                rationale: "The sources of acid and base gain/loss depend heavily on diet. An average American \"meatetarian\" diet results in a net daily gain of H+ (40-80mM). In contrast, a vegetarian diet results in a net daily loss of H+ due to the metabolism of anionic amino acids.",
+                source: "Regulation of Acid-Base Balance PDF, slide 15: 'Net gain/loss of H+ and Dietary acid load • Vegetarian: Net daily loss of H+ (metabolism of anionic amino acids)'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO2: Explain the sources of acids and bases that must be dealt with to maintain acid-base balance.",
+                question: "A 45-year-old man develops a severe viral gastroenteritis characterized by copious, watery diarrhea over three days. This pathological state will most directly impact his acid-base balance by causing which of the following?",
+                options: {
+                    A: "Gain of H+ from the loss of HCO3-",
+                    B: "Gain of H+ from the overproduction of CO2",
+                    C: "Loss of H+ from the metabolism of organic anions",
+                    D: "Loss of H+ from the loss of gastric HCl",
+                    E: "Loss of H+ from the retention of nonvolatile acids"
+                },
+                correctAnswer: "A",
+                rationale: "Diarrhea and the loss of other nongastric GI fluids result in a significant loss of bicarbonate (HCO3-). Because bicarbonate is a base, its loss shifts the balance and functionally serves as a gain of hydrogen ions (H+), leading to metabolic acidosis.",
+                source: "Regulation of Acid-Base Balance PDF, slide 12: 'Sources of H+ Gain or Loss | Gain: ... Gain of H+ from loss of HCO3- in diarrhea and other nongastric GI fluids'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO3: Explain the three main mechanisms by which hydrogen ion is handled (i.e. the chemical, respiratory and renal pathways for handling hydrogen ion buffering and excretion).",
+                question: "A healthy individual rapidly ascends to a high altitude and begins to hyperventilate. To handle the subsequent changes in hydrogen ion concentration, the body relies on various regulatory systems. Which of the following mechanisms is responsible for regulating the removal of CO2 (and H2CO3) from the extracellular fluid within minutes?",
+                options: {
+                    A: "Chemical acid-base buffer systems",
+                    B: "Hepatic urea synthesis",
+                    C: "Renal production of new bicarbonate",
+                    D: "Renal secretion of titratable acids",
+                    E: "Respiratory acid-base regulation"
+                },
+                correctAnswer: "E",
+                rationale: "The respiratory acid-base regulation mechanism handles pH changes by regulating the removal of CO2 (and thereby H2CO3) from the extracellular fluid within minutes. Chemical buffers react almost immediately, while renal regulation is slower (hours to days).",
+                source: "Regulation of Acid-Base Balance PDF, slide 18: 'Mechanisms of pH Regulation ... Respiratory Acid-Base Regulation: Regulates the removal of CO2 (and H2CO3) from the extracellular fluid within minutes'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO3: Explain the three main mechanisms by which hydrogen ion is handled (i.e. the chemical, respiratory and renal pathways for handling hydrogen ion buffering and excretion).",
+                question: "A patient with chronic kidney disease exhibits persistent metabolic acidosis. The physician notes that the patient's most powerful mechanism for controlling extracellular H+ concentration is impaired. Which of the following best describes the characteristics of this specific impaired regulatory system?",
+                options: {
+                    A: "It buffers H+ almost immediately by sequestering it.",
+                    B: "It exclusively utilizes hemoglobin to bind free protons.",
+                    C: "It is the fastest acting but least powerful system.",
+                    D: "It regulates the removal of volatile acids within minutes.",
+                    E: "It is slower but more powerful than the other systems by excreting acidic or alkaline urine."
+                },
+                correctAnswer: "E",
+                rationale: "Renal acid-base regulation works by excreting acidic or alkaline urine to regulate the extracellular H+ concentration. It is slower to respond than the chemical or respiratory systems but is the most powerful of the three mechanisms.",
+                source: "Regulation of Acid-Base Balance PDF, slide 18: 'Renal Acid-Base Regulation: Excrete acidic or alkaline urine to regulate the extracellular H+ concentration to within physiological limits; slower but more powerful than the other systems'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO4: Describe the role of buffers (bicarbonate, protein, hemoglobin and phosphate) in regulating body pH in relation to their pKa.",
+                question: "A medical student is studying the bicarbonate buffer system, noting its pKa is 6.1. Even though this pKa is not very close to the normal extracellular fluid pH of 7.4, this system remains the most important buffer in the extracellular fluid. Which of the following best explains why this buffer system is so highly effective despite its suboptimal pKa?",
+                options: {
+                    A: "Bicarbonate molecules can rapidly cross the blood-brain barrier.",
+                    B: "It is present in massive concentrations intracellularly.",
+                    C: "The lungs and kidneys dynamically control its components to maintain a 20:1 ratio.",
+                    D: "The pKa of bicarbonate shifts to 7.4 at normal body temperature.",
+                    E: "Volatile acids chemically bind to albumin to assist the buffer."
+                },
+                correctAnswer: "C",
+                rationale: "The bicarbonate buffer system is highly effective because it is an open system. The lungs continuously control the denominator (CO2/volatile acid), and the kidneys continuously control the numerator (HCO3-), actively keeping the ratio at 20:1 to maintain a pH of 7.4.",
+                source: "Regulation of Acid-Base Balance PDF, slides 20, 23, 24: 'Is the most important buffer in extracellular fluid even though the concentration of the components are low and the pK of the system is 6.1, which is not very close to normal extracellular fluid pH (7.4). ... Why does it work so well then? LUNGS KEEP RATIO AT 20:1 BY CONTROLLING THIS (HA) ... KIDNEYS KEEP RATIO AT 20:1 BY CONTROLLING THIS (H-)'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO4: Describe the role of buffers (bicarbonate, protein, hemoglobin and phosphate) in regulating body pH in relation to their pKa.",
+                question: "A physiologist evaluates the total chemical buffering capacity of the human body. He determines that 60-70% of the total chemical buffering capacity is provided by intracellular buffers that possess pKs very close to 7.4. Which of the following buffer systems fits this description?",
+                options: {
+                    A: "Ammonium",
+                    B: "Bicarbonate",
+                    C: "Carbonic anhydrase",
+                    D: "Phosphate",
+                    E: "Proteins (including Hemoglobin)"
+                },
+                correctAnswer: "E",
+                rationale: "Proteins, including hemoglobin (Hb), are the most important intracellular buffers. They represent 60-70% of the total chemical buffering capacity of the body, largely because the pKs for many cellular proteins that buffer H+ are in the range of 7.4.",
+                source: "Regulation of Acid-Base Balance PDF, slide 27: 'Proteins: Important Intracellular Buffers ... Represents 60-70% of the total chemical buffering capacity ... The pKs for many cellular proteins that buffer H+ are in range of 7.4'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO5: Describe the critical role of renal HCO3- reabsorption in acid/base balance.",
+                question: "A healthy adult filters approximately 4,320 mEq of bicarbonate (HCO3-) through the glomeruli each day. Because the renal tubular epithelium is inherently impermeable to HCO3-, this massive filtered load must be actively reabsorbed to prevent fatal metabolic acidosis. In order for filtered HCO3- to be reabsorbed, it must first associate with which of the following within the tubular lumen?",
+                options: {
+                    A: "A newly synthesized ammonia molecule",
+                    B: "A secreted hydrogen ion (H+)",
+                    C: "A secreted potassium ion (K+)",
+                    D: "An actively transported sodium ion (Na+)",
+                    E: "An excreted titratable acid"
+                },
+                correctAnswer: "B",
+                rationale: "The tubular epithelium is impermeable to bicarbonate. For HCO3- to be reabsorbed, it must bind to a secreted H+ in the lumen to form H2CO3, which then dissociates into CO2 and H2O. The CO2 diffuses into the cell to reform HCO3-, which is then transported into the blood.",
+                source: "Regulation of Acid-Base Balance PDF, slide 38: 'Renal tubular epithelium is impermeable to HCO3-. Therefore, HCO3- reabsorption requires that HCO3- associate with a H+ before the HCO3- can cross the tubular epithelium.'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO5: Describe the critical role of renal HCO3- reabsorption in acid/base balance.",
+                question: "A nephrologist is explaining the process of bicarbonate reclamation to a student. She emphasizes that the kidney must secrete 4,320 mEq of H+ daily just to preserve the filtered HCO3-. During the specific process of reabsorbing a filtered bicarbonate molecule, what is the ultimate fate of the secreted proton (H+)?",
+                options: {
+                    A: "It forms water and is not net excreted in the urine.",
+                    B: "It is buffered by phosphate and excreted in the urine.",
+                    C: "It is converted to ammonia and excreted in the urine.",
+                    D: "It is reabsorbed intact directly into the peritubular capillaries.",
+                    E: "It is stored intracellularly within the proximal tubule."
+                },
+                correctAnswer: "A",
+                rationale: "When a secreted H+ reacts with a filtered HCO3- to facilitate its reabsorption, they form H2CO3, which breaks down into CO2 and H2O. Thus, the secreted proton is not net excreted in the urine; it simply cycles to reclaim the bicarbonate. A proton must bind to a titratable acid or ammonia and be excreted in the urine to generate a new bicarbonate.",
+                source: "Regulation of Acid-Base Balance PDF, slides 40 & 46: 'Key point: For each HCO3- reabsorbed, there must be a H+ Secreted (not excreted)' and 'If H+ reacts with a filtered HCO3-, a HCO3- is reabsorbed. But there is not net gain of HCO3- to the body.'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO6: Explain the role titratable acids such as phosphate in the renal regulation of hydrogen ion excretion.",
+                question: "A 55-year-old man consumes a diet extremely high in protein, generating a large daily acid load. To maintain acid-base balance, his kidneys excrete H+ bound to titratable acids. However, the physician notes that the excretion of titratable acids cannot be easily increased to handle this massive excess daily acid load. Which of the following best explains this physiological limitation?",
+                options: {
+                    A: "Titratable acid excretion is heavily dependent on the respiratory rate.",
+                    B: "Titratable acid excretion is limited by the maximum urine pH of 8.0.",
+                    C: "Titratable acid excretion relies exclusively on the synthesis of glutamine.",
+                    D: "The quantity of the major titratable acid (phosphate) available is dependent on diet and PTH, not acid-base balance.",
+                    E: "The pKa of the phosphate buffer system is too low to function in the distal tubule."
+                },
+                correctAnswer: "D",
+                rationale: "Phosphoric acid is the major titratable acid. Its excretion depends entirely on the quantity of phosphate filtered, which is dictated by dietary intake and parathyroid hormone (PTH) levels. Therefore, titratable acid excretion is not regulated by acid-base balance and cannot scale up to meet a high acid load.",
+                source: "Regulation of Acid-Base Balance PDF, slide 53: 'Excretion of titratable acids is dependent on the quantity of phosphate filtered (major anion), which is dependent on diet and also PTH levels. As such, the excretion of titratable acids is not regulated by acid base balance and cannot be easily increased to excrete the daily acid load.'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO6: Explain the role titratable acids such as phosphate in the renal regulation of hydrogen ion excretion.",
+                question: "A patient with normal renal function has an acidic urinary pH of 5.5. Within the tubular lumen, secreted hydrogen ions bind to filtered non-bicarbonate buffers, predominantly HPO4(2-), converting it to H2PO4- which is then excreted. This specific buffering event directly results in which of the following?",
+                options: {
+                    A: "The addition of a new HCO3- to the blood",
+                    B: "The loss of a filtered HCO3- into the urine",
+                    C: "The passive reabsorption of urea",
+                    D: "The reabsorption of a previously filtered HCO3-",
+                    E: "The synthesis of glutamine by the liver"
+                },
+                correctAnswer: "A",
+                rationale: "When a secreted H+ binds to a titratable acid (like phosphate) and is excreted in the urine, the bicarbonate ion that was generated inside the tubular cell (via carbonic anhydrase) is added to the blood. This constitutes a net gain of \"new\" bicarbonate, unlike H+ binding to filtered bicarbonate, which merely reabsorbs the existing bicarbonate.",
+                source: "Regulation of Acid-Base Balance PDF, slide 50: 'If the secreted proton H+ binds to a titratable acid and is excreted in the urine, this results in the addition of a new HCO3- to the blood.'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO7: Explain the role ammonia in the renal regulation of hydrogen ion excretion.",
+                question: "A 40-year-old woman with chronic uncontrolled diabetes develops severe metabolic acidosis. Her kidneys compensate by significantly upregulating their H+ excretion capacity. Which of the following buffer systems is under physiological control and can be upregulated to excrete up to ~500 mEq/day of H+, making it the most important system for generating new HCO3- in chronic acidosis?",
+                options: {
+                    A: "Ammonium-ammonia buffer system",
+                    B: "Bicarbonate buffer system",
+                    C: "Creatinine buffer system",
+                    D: "Hemoglobin buffer system",
+                    E: "Phosphate buffer system"
+                },
+                correctAnswer: "A",
+                rationale: "The ammonium-ammonia buffer system is under physiological control. In states of chronic acidosis, the increased ECF H+ stimulates glutamine metabolism, upregulating the system to handle ~500 mEq/day of H+ excretion. This makes it the most important system for generating new bicarbonate during acidosis.",
+                source: "Regulation of Acid-Base Balance PDF, slide 62: 'The ammonium-ammonia buffer system is under physiological control and usually accounts for ~50% of H+ excretion and ~50% of new HCO3- generation. ... This upregulates H+ excretion capacity to about ~500mEq/day making it the most important system for regulating pH and generating new HCO3- in acidosis'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO7: Explain the role ammonia in the renal regulation of hydrogen ion excretion.",
+                question: "To facilitate the excretion of ammonium (NH4+) in the proximal tubule, the tubular epithelial cells must continually synthesize it from precursor molecules. The production of NH4+ in these cells, which simultaneously yields two \"new\" HCO3- molecules per molecule consumed, relies directly on the metabolism of which of the following?",
+                options: {
+                    A: "Acetoacetic acid",
+                    B: "Creatinine",
+                    C: "Glutamine",
+                    D: "Urea",
+                    E: "Uric acid"
+                },
+                correctAnswer: "C",
+                rationale: "In the proximal tubule, thick ascending limb, and distal tubule, ammonium (NH4+) is produced from the metabolism of the amino acid glutamine. The breakdown of one molecule of glutamine produces two NH4+ ions and two \"new\" HCO3- molecules.",
+                source: "Regulation of Acid-Base Balance PDF, slide 60: 'Ammonium Ion (NH4+) Production by the Proximal Tubule, Thick Ascending Limb and Distal Tubule ...[Diagram showing Glutamine converting to 2NH4+ and 2HCO3-]' and '2 “New” HCO3- for each molecule of glutamine consumed'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO8: Define the term Net acid excretion and its constituents.",
+                question: "A researcher is quantifying renal acid-base excretion in a study participant. She measures the daily urinary excretion of ammonium, titratable acids, and bicarbonate. To calculate the patient's \"Net acid excretion,\" which of the following mathematical formulas must she use?",
+                options: {
+                    A: "Ammonium excretion + urinary titratable acid + bicarbonate excretion",
+                    B: "Ammonium excretion + urinary titratable acid - bicarbonate excretion",
+                    C: "Ammonium excretion - urinary titratable acid + bicarbonate excretion",
+                    D: "Bicarbonate excretion - urinary titratable acid - ammonium excretion",
+                    E: "Urinary titratable acid - ammonium excretion - bicarbonate excretion"
+                },
+                correctAnswer: "B",
+                rationale: "Net acid excretion represents the total amount of acid eliminated from the body, which equates to the net addition of new bicarbonate to the blood. It is calculated by adding the acid excreted (bound to ammonia and titratable acids) and subtracting any base (bicarbonate) lost in the urine.",
+                source: "Regulation of Acid-Base Balance PDF, slide 65: 'Net acid excretion = NH4+ excretion + urinary titratable acid – bicarbonate excretion'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO8: Define the term Net acid excretion and its constituents.",
+                question: "A 25-year-old man presents with severe metabolic alkalosis after days of persistent vomiting. When quantifying his renal acid-base excretion during this alkalotic state, a nephrologist notes that his urinary titratable acid and NH4+ excretion drop to zero, while his HCO3- excretion heavily increases. Based on the formula for net acid excretion, what is the net acid excretion status in this patient?",
+                options: {
+                    A: "Positive net acid excretion of 59 mmol/day",
+                    B: "Positive net acid excretion of 200 mmol/day",
+                    C: "Net acid excretion of exactly zero",
+                    D: "Negative net acid excretion",
+                    E: "Unquantifiable due to the lack of titratable acids"
+                },
+                correctAnswer: "D",
+                rationale: "In alkalosis, the kidney stops excreting acid (titratable acid and NH4+ drop to 0) and begins dumping base (HCO3- excretion increases). Using the formula (Net acid excretion = NH4+ + titratable acid - HCO3-), this results in a negative net acid excretion (e.g., 0 + 0 - 80 = -80).",
+                source: "Regulation of Acid-Base Balance PDF, slide 65: 'In alkalosis, titratable acid and NH4+ excretion drop to 0, whereas HCO3- excretion increases. This yields a negative net acid excretion'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO9: Explain the distinctions between respiratory acidosis, respiratory alkalosis, metabolic acidosis and metabolic alkalosis.",
+                question: "A 68-year-old man with a long history of severe chronic obstructive pulmonary disease (COPD) presents with worsening dyspnea. Arterial blood gas reveals a pH of 7.25, a significantly elevated PCO2, and an elevated HCO3-. The primary underlying cause of his acid-base disturbance is characterized by which of the following?",
+                options: {
+                    A: "Decreased ventilation leading to an accumulation of volatile acid",
+                    B: "Excess generation of acetoacetic acid from tissue catabolism",
+                    C: "Failure of the kidneys to excrete metabolic acids",
+                    D: "Loss of alkali through severe diarrhea",
+                    E: "Over-ventilation by the lungs for metabolic demand"
+                },
+                correctAnswer: "A",
+                rationale: "The patient has a low pH (acidosis) and high PCO2 (carbonic/volatile acid), which defines respiratory acidosis. This is caused by insufficient ventilation (e.g., airway obstruction in COPD), leading to a buildup of CO2.",
+                source: "Regulation of Acid-Base Balance PDF, slide 68: 'Respiratory Acidosis: Decreased Ventilation and Increased PCO2 ... Insufficient ventilation for metabolic demand ... Airway obstruction'"
+            },
+            {
+                section: "Regulation of Acid-Base",
+                fullLO: "LO9: Explain the distinctions between respiratory acidosis, respiratory alkalosis, metabolic acidosis and metabolic alkalosis.",
+                question: "A 19-year-old woman is brought to the emergency department after a suspected drug overdose. Arterial blood gas shows a pH of 7.28, a decreased PCO2, and a decreased HCO3-. Calculation of her anion gap reveals a normal value of 10 mEq/L (normal range 8-12 mEq/L). Which of the following is the most likely cause of this patient's acid-base disorder?",
+                options: {
+                    A: "Airway obstruction",
+                    B: "Diabetic ketoacidosis",
+                    C: "Loss of HCO3- via severe diarrhea",
+                    D: "Psychoneurotic over-breathing",
+                    E: "Sudden ascent to high altitude"
+                },
+                correctAnswer: "C",
+                rationale: "A low pH with a low HCO3- indicates metabolic acidosis. A \"normal gap\" metabolic acidosis (hyperchloremic acidosis) occurs when bicarbonate is lost directly from the body (e.g., severe diarrhea) or kidneys, rather than being \"eaten up\" by an unmeasured organic acid (like in DKA, which causes an elevated anion gap).",
+                source: "Regulation of Acid-Base Balance PDF, slides 70 & 86: 'Metabolic Acidosis = Acidosis not related to increased PCO2 ... Loss of alkali (same effect as adding acid) -> Diarrhea; loss of HCO3- in feces' AND 'Normal Gap vs. Elevated Gap Acidosis ... As such the total number of measured anions (Cl- + HCO3-) wont change = Normal GAP – metabolic acidosis'"
+            },
+
+            // --- Section 2: Control Micturition & Diuretics ---
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO1: Review the mechanisms, site of action along the nephron, and common side effects of diuretics.",
+                question: "A 55-year-old man with metastatic lung carcinoma presents with confusion and muscle weakness. Labs show a serum calcium level of 14.2 mg/dL (severe hypercalcemia). The physician orders a diuretic specifically to promote calciuresis. This medication achieves its effect by inhibiting the Na+/K+/2Cl- cotransporter, which subsequently abolishes the lumen-positive potential in which of the following nephron segments?",
+                options: {
+                    A: "Cortical collecting duct",
+                    B: "Distal convoluted tubule",
+                    C: "Proximal convoluted tubule",
+                    D: "Thick ascending limb of the Loop of Henle",
+                    E: "Thin descending limb of the Loop of Henle"
+                },
+                correctAnswer: "D",
+                rationale: "Furosemide (a loop diuretic) acts on the thick ascending limb by inhibiting the Na+/K+/2Cl- cotransporter. Normally, this transporter creates a lumen-positive potential that drives paracellular calcium reabsorption. Furosemide abolishes this potential, promoting calcium excretion (calciuresis).",
+                source: "WINSTON AND O'CONNOR Control Micturition and Diuretics PDF, slides 10-11: 'Furosemide — inhibits the Na⁺/K⁺/2Cl⁻ cotransporter in the thick ascending limb, disrupting the lumen-positive potential that drives paracellular calcium reabsorption ... This promotes calciuresis, making furosemide the diuretic of choice for managing hypercalcemia'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO1: Review the mechanisms, site of action along the nephron, and common side effects of diuretics.",
+                question: "A 70-year-old man with heart failure is taking lisinopril, carvedilol, furosemide, and spironolactone. He presents with acute kidney injury and a serum potassium of 6.2 mEq/L (hyperkalemia). Spironolactone directly contributed to this electrolyte abnormality by acting as an antagonist at which of the following receptors?",
+                options: {
+                    A: "Alpha-1 adrenoceptor",
+                    B: "Calcium-sensing receptor",
+                    C: "Mineralocorticoid receptor",
+                    D: "Vasopressin V2 receptor",
+                    E: "Voltage-gated sodium channel"
+                },
+                correctAnswer: "C",
+                rationale: "Spironolactone is an aldosterone receptor antagonist that competitively blocks the mineralocorticoid receptor in collecting duct principal cells. This reduces ENaC-mediated sodium reabsorption, diminishing the lumen-negative potential, which ultimately reduces potassium secretion and leads to hyperkalemia.",
+                source: "WINSTON AND O'CONNOR Control Micturition and Diuretics PDF, slide 19: 'Spironolactone is an aldosterone receptor antagonist that competitively blocks the mineralocorticoid receptor in collecting duct principal cells.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO2: Describe the mechanism of action and common side effects of vasopressin antagonists.",
+                question: "A 62-year-old man with cirrhosis and severe ascites is found to have a serum sodium of 124 mEq/L (hyponatremia) despite volume overload. He is started on tolvaptan to selectively promote free water excretion. Tolvaptan achieves this aquaresis by preventing the insertion of which of the following channels into the renal collecting duct?",
+                options: {
+                    A: "Aquaporin-2 (AQP-2) channels",
+                    B: "Epithelial sodium channels (ENaC)",
+                    C: "Na+/Cl- cotransporters",
+                    D: "Na+/K+/2Cl- cotransporters",
+                    E: "Urea transporter A1 (UT-A1)"
+                },
+                correctAnswer: "A",
+                rationale: "Tolvaptan is a vasopressin antagonist. It blocks vasopressin (V2) receptors in the collecting duct, preventing the insertion of AQP-2 channels. This renders the collecting duct impermeable to water, leading to the excretion of free water (aquaresis).",
+                source: "WINSTON AND O'CONNOR Control Micturition and Diuretics PDF, slides 21 & 23: 'Mechanism: antagonizes vasopressin receptors inhibits insertion of AQP-2 channels in renal collecting duct' and 'Tolvaptan blocks vasopressin binding in the collecting duct, preventing AQP-2 channel insertion.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO2: Describe the mechanism of action and common side effects of vasopressin antagonists.",
+                question: "A patient is prescribed conivaptan for the treatment of hypervolemic hyponatremia. The physician warns the patient about potential adverse reactions associated with this specific class of drugs (aquaretics). Which of the following side effects is most commonly associated with vasopressin antagonists?",
+                options: {
+                    A: "Hyperkalemia",
+                    B: "Hypernatremia",
+                    C: "Metabolic acidosis",
+                    D: "Metabolic alkalosis",
+                    E: "Severe hypocalcemia"
+                },
+                correctAnswer: "B",
+                rationale: "Because vasopressin antagonists (like conivaptan and tolvaptan) cause selective free water loss without significant sodium loss, they can over-correct hyponatremia and cause hypernatremia. Other side effects include thirst, nausea, dry mouth, hypovolemia, and hepatotoxicity.",
+                source: "WINSTON AND O'CONNOR Control Micturition and Diuretics PDF, slide 21: 'Vasopressin Antagonists - Aquaretics ... Side effects: hypernatremia, increased thirst, nausea, dry mouth, dizziness, fatigue, hypovolemia, hepatotoxicity'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO3: Describe the flow of urine from the point at which it is first produced and how bladder filling occurs.",
+                question: "Urine produced by the nephrons ultimately drains from the renal papilla. To reach the bladder, it must be actively transported through the upper urinary tract. Which of the following mechanisms is primarily responsible for driving the urine from the renal calyces down through the ureter?",
+                options: {
+                    A: "Capillary action",
+                    B: "Ciliary beating of the transitional epithelium",
+                    C: "Gravity feed exclusively",
+                    D: "Peristaltic contractions triggered by stretch",
+                    E: "Pulsatile pressure from the renal artery"
+                },
+                correctAnswer: "D",
+                rationale: "Urine flows from the papilla into the calyces. The stretch of the calyx wall increases pacemaker activity, stimulating peristaltic contractions that spread to the renal pelvis and down the ureter, actively driving the urine.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 6: 'Urine flow from the papilla drains into the calyces. Stretch of the calyx wall, in response to accumulating volume, increases pacemaker activity and stimulates peristaltic contractions that spread to the renal pelvis.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO3: Describe the flow of urine from the point at which it is first produced and how bladder filling occurs.",
+                question: "As the human bladder fills, it can comfortably accommodate volumes up to 500 mL in an adult without allowing urine to reflexively back up into the kidneys. Which of the following anatomical or physiological features directly prevents the retrograde flow of urine from the bladder back into the ureters?",
+                options: {
+                    A: "The external urethral sphincter",
+                    B: "The internal urethral sphincter",
+                    C: "The skeletal muscle of the pelvic floor",
+                    D: "The tone of the detrusor muscle occluding the ureter outlets",
+                    E: "Valves within the minor calyces"
+                },
+                correctAnswer: "D",
+                rationale: "The ureters enter the bladder obliquely. The natural tone of the detrusor muscle in the bladder wall physically occludes these ureter outlets (acting as ureterovesicular valves), preventing the retrograde flow of urine back up the ureters during bladder filling and contraction.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 8: 'Schematic Illustration of the Bladder ... Ureterovesicular valves: Ureter outlets are occluded by the tone of the detrusor muscle.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO4: Describe the micturition reflex and explain its neurologic control.",
+                question: "During the micturition reflex, the bladder detrusor muscle contracts to generate 40-60 mmHg of pressure, a major step in bladder emptying. Which of the following nerve pathways provides the primary parasympathetic motor fibers responsible for stimulating this massive detrusor contraction?",
+                options: {
+                    A: "Genitofemoral nerves",
+                    B: "Hypogastric nerves",
+                    C: "Pelvic nerves (Sacral Plexus S2-S4)",
+                    D: "Pudendal nerve",
+                    E: "Vagus nerve"
+                },
+                correctAnswer: "C",
+                rationale: "The parasympathetic motor fibers that terminate in the bladder wall and stimulate the detrusor muscle to contract travel via the pelvic nerves, originating from the sacral plexus (S2-S4).",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 10: 'Innervation of the Urinary Bladder ... Pelvic nerves | Sacral Plexus { S2 S3 S4 ... Parasympathetic motor fibers terminate in ganglion cells in the bladder wall. Postganglionic fibers innervate the detrusor muscle.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO4: Describe the micturition reflex and explain its neurologic control.",
+                question: "A healthy adult feels the urge to urinate but is in a situation where a restroom is not available. She consciously suppresses the micturition reflex to prevent bladder emptying. Which of the following central nervous system structures exerts the primary inhibitory control over the micturition reflex to allow this voluntary suppression?",
+                options: {
+                    A: "Cerebellum",
+                    B: "Cerebral cortex",
+                    C: "Hypothalamus",
+                    D: "Medulla oblongata",
+                    E: "Pons"
+                },
+                correctAnswer: "B",
+                rationale: "While the micturition reflex is a spinal reflex with facilitatory and inhibitory centers in the pons, the mainly inhibitory control that prevents the reflex and delays bladder emptying when desired is exerted by areas in the cerebral cortex.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 17: 'The MICTURITION REFLEX is a spinal reflex. Additional facilitory and inhibitory control is exerted by brain stem centers in the pons. Mainly inhibitory control is exerted by areas in the cerebral cortex.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO5: Define and understand the effects on the bladder of spinal cord lesions and spinal shock, and neurogenic bladder.",
+                question: "A 25-year-old man suffers a traumatic spinal cord injury resulting in complete transection above the sacral region. After the initial period of spinal shock resolves, how will his bladder emptying function most likely manifest?",
+                options: {
+                    A: "Absolute retention of urine requiring lifelong catheterization",
+                    B: "Constant, continuous dripping of urine directly from the ureters",
+                    C: "Micturition reflexes will occur, but emptying will be unannounced and uncontrolled",
+                    D: "Micturition will only occur when he consciously contracts his abdominal muscles",
+                    E: "The internal sphincter will permanently spasm shut"
+                },
+                correctAnswer: "C",
+                rationale: "Spinal cord damage above the sacral region causes an \"Automatic Bladder\". Because the sacral reflex arc is intact but disconnected from central control, micturition reflexes still occur (\"typical\" reflexes), but they lack voluntary inhibition, leading to uncontrolled and unannounced bladder emptying.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 24: 'Automatic Bladder: Spinal cord damage above the sacral region inhibits central control of micturition reflexes. Micturition reflexes are “typical” but uncontrolled and unannounced bladder emptying occurs.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO5: Define and understand the effects on the bladder of spinal cord lesions and spinal shock, and neurogenic bladder.",
+                question: "A 60-year-old man with long-standing, poorly controlled type 2 diabetes mellitus presents with chronic urinary leakage. Urodynamic testing reveals a massively distended bladder. The patient states he rarely feels the urge to void. The underlying cause of his incontinence is most directly related to which of the following?",
+                options: {
+                    A: "Failure to transmit stretch signals due to neuropathy",
+                    B: "Hyperactivity of the detrusor muscle",
+                    C: "Loss of central inhibition from the cerebral cortex",
+                    D: "Spasticity of the pelvic floor muscles",
+                    E: "Weakness of the external urethral sphincter"
+                },
+                correctAnswer: "A",
+                rationale: "The patient has overflow incontinence due to diabetic neuropathy. The loss of sensory control (failure to transmit stretch signals) means the patient does not feel the urge to void. The bladder fills to absolute capacity until intra-bladder pressure overcomes sphincter pressure, causing a slow leak (overflow).",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 24: 'Overflow incontinence Loss of sensory control resulting in failure to transmit stretch signals. Bladder fills to capacity and slowly leaks out the urethra. Overflow incontinence is usually due to neuropathy (ie, diabetes), so that one cannot feel the urge to void...'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO6: Explain the mechanisms by which bladder emptying (Micturition) is regulated.",
+                question: "A healthy individual makes the conscious decision to void their bladder. To initiate voluntary urination, the individual contracts their abdominal muscles. This action facilitates the onset of the micturition reflex primarily by causing which of the following anatomical changes?",
+                options: {
+                    A: "Direct depolarization of the parasympathetic pelvic nerves",
+                    B: "Direct inhibition of the sympathetic hypogastric nerves",
+                    C: "Increasing bladder pressure and stretching the walls of the bladder neck",
+                    D: "Physically pulling the external sphincter open via ligamentous attachments",
+                    E: "Shunting blood away from the internal sphincter"
+                },
+                correctAnswer: "C",
+                rationale: "Voluntary urination begins with the decision to empty the bladder. Voluntary contraction of the abdominal muscles increases bladder pressure and stretches the walls of the bladder neck. This increased pressure stimulates stretch receptors, which then induces the micturition reflex and simultaneously relaxes the external sphincter.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 20: 'VOLUNTARY URINATION Decision to empty the bladder ... Voluntary contraction of abdominal muscles increases bladder pressure and stretches the walls of the bladder neck. Increased pressure stimulates stretch receptors and induces micturition reflex...'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO6: Explain the mechanisms by which bladder emptying (Micturition) is regulated.",
+                question: "The physiological process of micturition involves an autonomous, self-regenerative cycle. As the bladder fills, sensory stretch receptors trigger contractions. According to the standard definition, the micturition reflex is best described as a complete cycle consisting of which of the following sequences?",
+                options: {
+                    A: "Progressive pressure decrease -> sustained relaxation -> return to tone",
+                    B: "Progressive pressure increase -> sustained pressure -> return to basal tone",
+                    C: "Rapid sphincter relaxation -> detrusor spasm -> prolonged detrusor fatigue",
+                    D: "Sudden high pressure spike -> immediate pressure drop -> constant dripping",
+                    E: "Sustained low pressure -> intermittent high-pressure spikes -> external sphincter spasm"
+                },
+                correctAnswer: "B",
+                rationale: "The micturition reflex is defined as a single, complete cycle consisting of a progressive and rapid increase in pressure, a period of sustained pressure, and finally a return of the pressure to the basal tone of the bladder.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 15: 'The MICTURITION REFLEX is a complete cycle of: • progressive and rapid increases in pressure • a period of sustained pressure • a return of the pressure to the basal tone of the bladder'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO7: Explain the regulation of sphincter control in regulating bladder emptying.",
+                question: "During an evaluation of a patient with urinary retention, a neurologist assesses the function of the patient's external urethral sphincter. Unlike the internal sphincter, the external sphincter is composed of skeletal muscle and is under voluntary control. Which of the following peripheral nerves is directly responsible for delivering these skeletal motor fibers to the external sphincter?",
+                options: {
+                    A: "Hypogastric nerve",
+                    B: "Ilioinguinal nerve",
+                    C: "Pelvic splanchnic nerve",
+                    D: "Pudendal nerve",
+                    E: "Vagus nerve"
+                },
+                correctAnswer: "D",
+                rationale: "The external urethral sphincter is innervated by somatic (skeletal) motor fibers. These specific fibers travel to the external sphincter within the pudendal nerve.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 11: 'Innervation of the Urinary Bladder ... Pudendal nerve contains the skeletal motor fibers to the external sphincter'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO7: Explain the regulation of sphincter control in regulating bladder emptying.",
+                question: "As a healthy person's bladder progressively fills, stretch receptors frequently trigger micturition waves. However, if the person wishes to prevent bladder emptying, the body ensures the external sphincter remains closed. During this phase of continued filling without emptying, what neural event naturally occurs at the external sphincter before the central nervous system (CNS) overrides it?",
+                options: {
+                    A: "Neural signals cause massive hypertrophy of the sphincter muscle.",
+                    B: "Neural signals cause the external sphincter to become completely refractory.",
+                    C: "Neural signals directly trigger sympathetic contraction of the sphincter.",
+                    D: "Neural signals inhibit tension in the external sphincter.",
+                    E: "Neural signals reverse the flow of urine at the sphincter."
+                },
+                correctAnswer: "D",
+                rationale: "As micturition reflexes occur during filling, the reflex itself attempts to empty the bladder. Prevention of bladder emptying during this continued filling actually results in neural signals that inhibit tension in the external sphincter (attempting to relax it). However, conscious CNS control steps in to actively override this inhibition and keep the sphincter contracted.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 16: 'Prevention of bladder emptying during continued filling will result in neural signals that inhibit tension in the external sphincter. CNS control can override this inhibition.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO8: Define the term “urinary incontinence” and explain what it involves.",
+                question: "A 65-year-old woman presents to the clinic complaining of occasional urinary leakage. She notes that small volumes of urine escape whenever she laughs heartily, coughs, or sneezes. She has a history of four uncomplicated vaginal deliveries. The underlying cause of this patient's specific type of urinary incontinence is most accurately described as:",
+                options: {
+                    A: "An overactive bladder with frequent small spasms",
+                    B: "Failure of the bladder wall to transmit stretch signals",
+                    C: "Severe central nervous system injury",
+                    D: "Spasticity of the internal urethral sphincter",
+                    E: "Weakness of the urethral sphincter"
+                },
+                correctAnswer: "E",
+                rationale: "The patient is describing stress incontinence, which is characterized by the leakage of small volumes of urine during events that increase abdominal pressure (laughing, coughing). This is fundamentally caused by a weakness of the urethral sphincter and is most common in older women with a history of vaginal deliveries.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 24: 'Stress incontinence is caused by a weakness of the urethral sphincter. Increased abdominal pressure (eg, laughing, coughing) causes leakage, typically of small volumes of urine. This most commonly occurs in older women with a history of vaginal deliveries.'"
+            },
+            {
+                section: "Control Micturition & Diuretics",
+                fullLO: "LO8: Define the term “urinary incontinence” and explain what it involves.",
+                question: "A 72-year-old man who recently suffered a brain stem stroke complains of frequent, massive urinary accidents. He describes suddenly feeling an intense need to urinate, immediately followed by the leakage of large volumes of urine before he can reach a bathroom. This clinical presentation is best classified as which of the following?",
+                options: {
+                    A: "Automatic bladder",
+                    B: "Overflow incontinence",
+                    C: "Stress incontinence",
+                    D: "Transient incontinence",
+                    E: "Urge incontinence"
+                },
+                correctAnswer: "E",
+                rationale: "Urge incontinence is essentially an overactive bladder where bladder spasms cause leakage of large volumes of urine. It is frequently caused by brain stem or spinal damage that interrupts the normal inhibitory signals from the CNS, leading to frequent, uncontrollable micturition reflex responses.",
+                source: "O'CONNOR Control Micturition and Diuretics PDF, slide 24: 'Urge incontinence can be thought of as an overactive bladder where small bladder spasms cause leakage, typically of large volumes of urine. Spinal or brain stem damage interrupts inhibitory signals while facilitatory signals continue unabated. Results in frequent, uncontrollable micturition reflex responses.'"
+            }
+        ];
+
+        // --- Core Logic ---
+        const quizRoot = document.getElementById('quiz-root');
+        const themeSelect = document.getElementById('theme-select');
+        const pinBtn = document.getElementById('pin-btn');
+        const mainHeader = document.getElementById('main-header');
+        const sectionNav = document.getElementById('section-nav');
+        const customBuilder = document.getElementById('custom-builder');
+        const rootElements = document.documentElement;
+
+        let isRevealed = false;
+
+        function toggleAllLOs() {
+            isRevealed = !isRevealed;
+            const btn = document.getElementById('reveal-all-btn');
+            btn.textContent = isRevealed ? "Hide Learning Objectives" : "Show Learning Objectives";
+            
+            document.querySelectorAll('.lo-box').forEach(box => {
+                box.style.display = isRevealed ? 'block' : 'none';
+            });
+        }
+
+        function initQuiz() {
+            let currentSection = "";
+            let sectionIndex = 0;
+            
+            quizData.forEach((item, index) => {
+                if (item.section !== currentSection) {
+                    currentSection = item.section;
+                    
+                    const sectionId = 'sec-' + sectionIndex;
+                    
+                    const sectionHeader = document.createElement('h2');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.id = sectionId;
+                    sectionHeader.textContent = currentSection;
+                    quizRoot.appendChild(sectionHeader);
+
+                    const navBtn = document.createElement('button');
+                    let btnText = currentSection;
+                    if (btnText.includes("Regulation of Acid-Base")) btnText = "Regulation of Acid-Base";
+                    if (btnText.includes("Control Micturition & Diuretics")) btnText = "Control Micturition & Diuretics";
+                    
+                    navBtn.textContent = btnText;
+                    navBtn.onclick = () => {
+                        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                    };
+                    sectionNav.appendChild(navBtn);
+
+                    sectionIndex++;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                const loBox = document.createElement('div');
+                loBox.className = 'lo-box';
+                loBox.id = `lo-${index}`;
+                loBox.innerHTML = item.fullLO;
+                card.appendChild(loBox);
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `${index + 1}. ${item.question}`;
+                card.appendChild(qText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                for (const[key, value] of Object.entries(item.options)) {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = key;
+
+                    const span = document.createElement('span');
+                    span.innerHTML = `${key}. ${value}`;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionsGrid.appendChild(label);
+                }
+                card.appendChild(optionsGrid);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-check';
+                btn.textContent = 'Check Answer';
+                btn.onclick = () => checkAnswer(index);
+                card.appendChild(btn);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+                card.appendChild(feedback);
+
+                quizRoot.appendChild(card);
+            });
+
+            const returnContainer = document.createElement('div');
+            returnContainer.style.textAlign = 'center';
+            returnContainer.style.marginTop = '2rem';
+            
+            const returnBtn = document.createElement('a');
+            returnBtn.href = 'https://ibecerramcg.github.io/GI-GU-ENDO-Practice-Quizzes/';
+            returnBtn.className = 'btn-link';
+            returnBtn.textContent = '← Return to Quiz Directory';
+            
+            returnContainer.appendChild(returnBtn);
+            quizRoot.appendChild(returnContainer);
+
+            const savedTheme = localStorage.getItem('quizTheme') || 'dark';
+            themeSelect.value = savedTheme;
+            changeTheme(savedTheme);
+
+            const savedPinState = localStorage.getItem('headerPinned');
+            toggleHeader(savedPinState !== 'false');
+        }
+
+        function checkAnswer(index) {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const feedbackEl = document.getElementById(`feedback-${index}`);
+            const data = quizData[index];
+
+            if (!selected) {
+                alert("Please select an answer.");
+                return;
+            }
+
+            const isCorrect = selected.value === data.correctAnswer;
+            
+            let html = `<span class="feedback-header">${isCorrect ? "Correct!" : "Incorrect"}</span>`;
+            if (!isCorrect) {
+                html += `<div>The correct answer is <strong>${data.correctAnswer}</strong>.</div>`;
+            }
+            
+            html += `<div class="rationale"><strong>Rationale:</strong> ${data.rationale}</div>`;
+            html += `<div class="source"><strong>Source:</strong> ${data.source}</div>`;
+
+            feedbackEl.innerHTML = html;
+            feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackEl.style.display = 'block';
+        }
+
+        function changeTheme(themeName) {
+            localStorage.setItem('quizTheme', themeName);
+            
+            if (themeName === 'custom') {
+                rootElements.removeAttribute('data-theme');
+                customBuilder.classList.add('active');
+                loadCustomTheme();
+            } else {
+                rootElements.setAttribute('data-theme', themeName);
+                customBuilder.classList.remove('active');
+                rootElements.removeAttribute('style');
+            }
+        }
+
+        function updateCustomTheme() {
+            const bg = document.getElementById('color-bg').value;
+            const card = document.getElementById('color-card').value;
+            const text = document.getElementById('color-text').value;
+            const accent = document.getElementById('color-accent').value;
+
+            rootElements.style.setProperty('--bg-body', bg);
+            rootElements.style.setProperty('--bg-header', bg);
+            rootElements.style.setProperty('--bg-card', card);
+            rootElements.style.setProperty('--highlight-bg', card);
+            rootElements.style.setProperty('--text-main', text);
+            rootElements.style.setProperty('--text-accent', accent);
+            rootElements.style.setProperty('--button-bg', accent);
+            rootElements.style.setProperty('--button-text', bg);
+            rootElements.style.setProperty('--border-color', accent + '40');
+
+            const customColors = { bg, card, text, accent };
+            localStorage.setItem('customThemeColors', JSON.stringify(customColors));
+        }
+
+        function loadCustomTheme() {
+            const savedColors = JSON.parse(localStorage.getItem('customThemeColors'));
+            if (savedColors) {
+                document.getElementById('color-bg').value = savedColors.bg;
+                document.getElementById('color-card').value = savedColors.card;
+                document.getElementById('color-text').value = savedColors.text;
+                document.getElementById('color-accent').value = savedColors.accent;
+                updateCustomTheme();
+            } else {
+                updateCustomTheme();
+            }
+        }
+
+        function toggleHeader(forceState) {
+            const isCurrentlyPinned = !mainHeader.classList.contains('unpinned');
+            const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyPinned;
+
+            if (newState) {
+                mainHeader.classList.remove('unpinned');
+                pinBtn.classList.add('pin-active');
+                localStorage.setItem('headerPinned', 'true');
+            } else {
+                mainHeader.classList.add('unpinned');
+                pinBtn.classList.remove('pin-active');
+                localStorage.setItem('headerPinned', 'false');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+
+    </script>
+</body>
+</html>
